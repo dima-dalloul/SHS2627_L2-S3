@@ -55,13 +55,17 @@ public class DictionnaireStringInt {
             // The key is not present, so we return 0
             return 0;
         else {
-            // version 1 : expanded code
-            int resultID = rechercherIdx(keyToBeFound);
-            return valuesArray[resultID];
+            // version 1 : expanded code - Regular Search
+            // int resultID = rechercherIdx(keyToBeFound);
+            // return valuesArray[resultID];
 
-            // version 2 : compact code
+            // version 2 : compact code - Regular Search
             // uncomment the next line to test
-            //return valuesArray[rechercherIdx(keyToBeFound)];
+            // return valuesArray[rechercherIdx(keyToBeFound)];
+
+            // version 3 : expanded code - Dichotomic Search
+            int resultID = rechercheDichotomiqueIdx(keyToBeFound);
+            return valuesArray[resultID];
         }
     }
 
@@ -129,9 +133,9 @@ public class DictionnaireStringInt {
     }
 
     /*
-    Écrire la méthode supprimer qui supprime couple (clé ; valeur).
-    Pour cela, on remplacera la clé, resp. la valeur, à supprimer par le dernier élément du tableau.
-     */
+    * Question 7 : Écrire la méthode supprimer qui supprime couple (clé ; valeur).
+    * Pour cela, on remplacera la clé, resp. la valeur, à supprimer par le dernier élément du tableau.
+    */
     public int supprimer(int value, String key){
         int keyID = rechercherIdx(key);
 
@@ -197,4 +201,71 @@ public class DictionnaireStringInt {
         displayArrays += " }";
         return displayArrays;
     }
+
+    /**
+     * Question 9 : Proposer une nouvelle méthode de recherche (remplaçant celle de la Question 3) qui
+     * réalise une recherche dichotomique. La recherche dichotomique est un moyen efficace de recherche
+     * dans un tableau trié. Le principe consiste à comparer l’élément à recherche avec l’élément de la case
+     * du milieu du tableau. Si les éléments sont égaux alors c’est gagné sinon, on recommence la même
+     * chose dans la moitié du tableau pertinente (celle d’après si l’élément du milieu est plus petit que
+     * l’élément recherché, celle d’avant sinon)
+     */
+    private int rechercheDichotomiqueIdx(String cle) {
+        int min=0;
+        int max=nbElements;
+        while (min<max) {
+            int idx = (max+min)/2;
+            int comp = cle.compareTo(keysArray[idx]);
+            if (comp==0) {
+                return idx;
+            }
+            else if (comp<0) {
+                max=idx;
+            }
+            else {
+                min=idx+1;
+            }
+        }
+        return -1-(max+min)/2;
+    }
+
+    /**
+     * Question 10 : Proposer une nouvelle méthode d’ajout (remplaçant celle de la Question 6) qui insère
+     * un couple (clé ; valeur) à la bonne place selon l’ordre alphabétique des clés. Modifier également, la
+     * méthode de suppression, pour qu’elle préserve l’ordre dans le dictionnaire
+     */
+
+    public void ajouterModifierDichotomique(int valeur, String cle) {
+        int idx = rechercherIdx(cle) ;
+        if (idx>-1) {
+            valuesArray[idx]=valeur;
+        }
+        else {
+            agrandir();
+            idx = -idx -1; // ou idx~=idx
+            for (int i=nbElements ; i>idx ;i--) {
+                keysArray[i]=keysArray[i-1];
+                valuesArray[i]=valuesArray[i-1];
+            }
+            keysArray[idx]=cle;
+            valuesArray[idx]=valeur;
+            nbElements+=1;
+
+        }
+    }
+
+
+    public int supprimerDichotomique(String mot) {
+        int idx = rechercherIdx(mot);
+        if (idx<0) return 0;
+        int res = valuesArray[idx];
+        for (int i=idx ; i<nbElements-1 ; i++) {
+            keysArray[i]=keysArray[i+1];
+            valuesArray[i]=valuesArray[i+1];
+        }
+        // on aurait pu supprimer ce qui se trouve à nbElements, mais ce n'est pas obligatoire
+        nbElements--;
+        return res;
+    }
+
 }
