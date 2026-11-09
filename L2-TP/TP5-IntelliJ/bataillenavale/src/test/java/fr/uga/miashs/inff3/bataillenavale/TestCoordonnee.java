@@ -29,9 +29,9 @@ public class TestCoordonnee {
 		assertEquals(3,b4.getLigne());
 		assertEquals(1,b4.getColonne());
 		
-		/*a10 = new Coordonnee("A10");
+		a10 = new Coordonnee("A10");
 		assertEquals(a10.getLigne(),9);
-		assertEquals(a10.getColonne(),0);*/
+		assertEquals(a10.getColonne(),0);
 	}
 	
 	@Test
@@ -72,6 +72,8 @@ public class TestCoordonnee {
 
 		 // test non égalité avec la même ligne mais pas la même colonne;
 		 assertNotEquals(new Coordonnee("C1"),a1);
+
+		 assertNotEquals("o",a1);
 	}
 	
 	@Test
